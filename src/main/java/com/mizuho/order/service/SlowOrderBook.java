@@ -1,6 +1,7 @@
 package com.mizuho.order.service;
 
 import com.mizuho.order.model.Order;
+import com.mizuho.order.model.Side;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class SlowOrderBook implements OrderBook {
     }
 
     @Override
-    public int getMaxLevel(char side) {
+    public int getMaxLevel(Side side) {
         Set<Double> prices = new HashSet<>();
         for (OrderNanotime orderNanotime : orderNanotimes) {
             if (orderNanotime.getOrder().getSide() == side) {
@@ -77,7 +78,7 @@ public class SlowOrderBook implements OrderBook {
     }
 
     @Override
-    public double getPrice(char side, int level) {
+    public double getPrice(Side side, int level) {
         //this approach of iterating through, calculating the levels per side would be very slow for large books
         List<Double> prices = new ArrayList<>();
         for (OrderNanotime orderNanotime : orderNanotimes) {
@@ -90,7 +91,7 @@ public class SlowOrderBook implements OrderBook {
     }
 
     @Override
-    public double getTotalSize(char side, int level) {
+    public double getTotalSize(Side side, int level) {
         double price = getPrice(side, level);
         long totalSize = 0;
         for (OrderNanotime orderNanotime : orderNanotimes) {
@@ -102,7 +103,7 @@ public class SlowOrderBook implements OrderBook {
     }
 
     @Override
-    public List<Order> getAllOrders(char side) {
+    public List<Order> getAllOrders(Side side) {
         List<OrderNanotime> list = orderNanotimes.stream().filter(orderNanotime -> orderNanotime.getOrder().getSide() == side).collect(Collectors.toList());
         Collections.sort(
                 list,

@@ -1,6 +1,7 @@
 package com.mizuho.order.service;
 
 import com.mizuho.order.model.Order;
+import com.mizuho.order.model.Side;
 
 import java.util.List;
 
@@ -9,10 +10,10 @@ public interface OrderBook {
     Order peek(long id);
     Order remove(long id);
     void amend(long id, long newSize);
-    double getPrice(char side, int level);
-    double getTotalSize(char side, int level);
-    int getMaxLevel(char side);
-    List<Order> getAllOrders(char side);
+    double getPrice(Side side, int level);
+    double getTotalSize(Side side, int level);
+    int getMaxLevel(Side side);
+    List<Order> getAllOrders(Side side);
 
     default void verifyLevel(int level) {
         if (level < 1) {
@@ -24,8 +25,8 @@ public interface OrderBook {
         verifySide(order.getSide());
     }
 
-    default void verifySide(char side) {
-        if (side != 'B' && side != 'O') {
+    default void verifySide(Side side) {
+        if (side != Side.BID && side != Side.OFFER) {
             throw new IllegalArgumentException("side needs to be B or O");
         }
     }

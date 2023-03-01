@@ -1,6 +1,7 @@
 package com.mizuho.order.service;
 
 import com.mizuho.order.model.Order;
+import com.mizuho.order.model.Side;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,8 +43,8 @@ public class SlowOrderBookLoadTest {
     public void shouldAddAndGetPriceManyOrders() {
         add();
         long start = System.currentTimeMillis();
-        double bidPriceLevel10 = slowOrderBook.getPrice('B', 10);
-        double offerPriceLevel10 = slowOrderBook.getPrice('O', 10);
+        double bidPriceLevel10 = slowOrderBook.getPrice(Side.BID, 10);
+        double offerPriceLevel10 = slowOrderBook.getPrice(Side.OFFER, 10);
         long stop = System.currentTimeMillis();
 
         System.out.println(EXPECTED_MAX_ORDER_BOOK_SIZE + ": it took: " + (stop - start) + " ms to getPrice for bid and offer level10");
@@ -53,13 +54,13 @@ public class SlowOrderBookLoadTest {
     public void shouldAddAndGetTotalSizeManyOrders() {
         add();
         long start = System.currentTimeMillis();
-        int b = slowOrderBook.getMaxLevel('B');
+        int b = slowOrderBook.getMaxLevel(Side.BID);
         for (int i = 1; i <= b; i++) {
-            double bidTotalSize = slowOrderBook.getTotalSize('B', i);
+            double bidTotalSize = slowOrderBook.getTotalSize(Side.BID, i);
         }
-        int o = slowOrderBook.getMaxLevel('O');
+        int o = slowOrderBook.getMaxLevel(Side.OFFER);
         for (int i = 1; i <= o; i++) {
-            double offerTotalSize = slowOrderBook.getTotalSize('O', i);
+            double offerTotalSize = slowOrderBook.getTotalSize(Side.OFFER, i);
         }
         long stop = System.currentTimeMillis();
 
@@ -71,8 +72,8 @@ public class SlowOrderBookLoadTest {
         add();
         long start = System.currentTimeMillis();
 
-        System.out.println(EXPECTED_MAX_ORDER_BOOK_SIZE + ": count of all bid orders: " + slowOrderBook.getAllOrders('B').size());
-        System.out.println(EXPECTED_MAX_ORDER_BOOK_SIZE + ": count of all offer orders: " + slowOrderBook.getAllOrders('O').size());
+        System.out.println(EXPECTED_MAX_ORDER_BOOK_SIZE + ": count of all bid orders: " + slowOrderBook.getAllOrders(Side.BID).size());
+        System.out.println(EXPECTED_MAX_ORDER_BOOK_SIZE + ": count of all offer orders: " + slowOrderBook.getAllOrders(Side.OFFER).size());
 
         long stop = System.currentTimeMillis();
 
@@ -90,7 +91,7 @@ public class SlowOrderBookLoadTest {
     private void add() {
         for (long i = 1; i <= EXPECTED_MAX_ORDER_BOOK_SIZE; i++) {
             double v = random.nextInt(10000);
-            long nanoTime = slowOrderBook.add(new Order(i, v, (i % 2) == 0 ? 'B' : 'O', (long) random.nextInt(10)));
+            long nanoTime = slowOrderBook.add(new Order(i, v, (i % 2) == 0 ? Side.BID : Side.OFFER, (long) random.nextInt(10)));
         }
     }
 
