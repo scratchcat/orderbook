@@ -53,15 +53,17 @@ public class FasterOrderBookLoadTest {
     public void shouldAddAndGetTotalSizeManyOrders() {
         add();
         long start = System.currentTimeMillis();
-        for (int i = 1; i <= fasterOrderBook.getMaxLevel('B'); i++) {
+        int b = fasterOrderBook.getMaxLevel('B');
+        for (int i = 1; i <= b; i++) {
             double bidTotalSize = fasterOrderBook.getTotalSize('B', i);
         }
-        for (int i = 1; i <= fasterOrderBook.getMaxLevel('O'); i++) {
+        int o = fasterOrderBook.getMaxLevel('O');
+        for (int i = 1; i <= o; i++) {
             double offerTotalSize = fasterOrderBook.getTotalSize('O', i);
         }
         long stop = System.currentTimeMillis();
 
-        System.out.println(EXPECTED_MAX_ORDER_BOOK_SIZE + ": it took: " + (stop - start) + " ms to getTotalSize for bid and offer level10");
+        System.out.println(EXPECTED_MAX_ORDER_BOOK_SIZE + ": it took: " + (stop - start) + " ms to getTotalSize for bid and offer at all levels");
     }
 
     @Test
